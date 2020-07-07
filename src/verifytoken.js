@@ -1,12 +1,12 @@
 const jwt = require("jsonwebtoken");
 
-module.exports = (req, res, next) => {
+module.exports = async (req, res, next) => {
+	const token = req.cookies.token || "";
 	try {
-		const token = req.header("token");
-		if (!token)
-			return res.status(400).send("Access Denied, No token provided");
-
-		const verified = jwt.verify(token, process.env.JWT_SECRET);
+		if (!token) {
+			return res.status(401).json("You need to Login");
+		}
+		const verified = await jwt.verify(token, process.env.JWT_SECRET);
 		req.user = verified;
 		next();
 	} catch (err) {

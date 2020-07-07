@@ -53,14 +53,36 @@ router.post("/login", async (req, res) => {
 		const validPass = await bcrypt.compare(password, user.password);
 		if (!validPass) return res.status(400).send("Password not correct");
 
+		const jwt_content = {
+			_id: user._id,
+			status: {
+				code: 1,
+				lastlogin: Date.now(),
+			},
+		};
 		// create and assign jwt
-		const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+		const token = jwt.sign(jwt_content, process.env.JWT_SECRET, {
+			expiresIn: "7d",
+		});
 		res.header("token", token);
+		res.cookie("token", token, {
+			expires: new Date(Date.now() + 604800000),
+			secure: false, // set to true if your using https
+			httpOnly: true,
+		});
 		res.send("Logged in!");
 	} catch (err) {
 		res.status(400).send(err);
 	}
 });
 
-router.post("/logout", (req, res) => {});
+router.get("/logout", (req, res) => {
+	try {
+		res.clearCookie("token");
+		res.send("Logged out!");
+	} catch (err) {
+		res.status(400).send(err);
+	}
+});
+
 module.exports = router;
