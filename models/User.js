@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const roles = require("../src/roles");
 const UserSchema = new mongoose.Schema({
 	username: {
 		type: String,
@@ -21,7 +21,8 @@ const UserSchema = new mongoose.Schema({
 	role: {
 		type: String,
 		required: false,
-		default: "Local",
+		default: roles.Local,
+		enum: ["Admin", "Supervisor", "Local"],
 	},
 });
 

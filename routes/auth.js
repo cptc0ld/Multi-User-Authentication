@@ -23,6 +23,7 @@ router.post("/register", async (req, res) => {
 			username: req.body.username,
 			password: hashpass,
 			emailid: req.body.emailid,
+			role: req.body.role || null,
 		});
 
 		const savedUser = await user.save();
@@ -55,6 +56,7 @@ router.post("/login", async (req, res) => {
 
 		const jwt_content = {
 			_id: user._id,
+			_role: user.role,
 			status: {
 				code: 1,
 				lastlogin: Date.now(),

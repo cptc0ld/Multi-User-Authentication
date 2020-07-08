@@ -8,7 +8,6 @@ const cookieParser = require("cookie-parser");
 // routes
 const registerRoute = require("./routes/auth");
 const postRoute = require("./routes/posts");
-const userdetails = require("./routes/userdetails");
 // dotenv
 dotenv.config();
 
@@ -25,6 +24,5 @@ app.use(cors());
 app.use(cookieParser());
 //route middlewares
 app.use("/user", registerRoute);
-app.use("/post", postRoute);
-app.use("/details", userdetails);
+app.use("/details", postRoute);
 app.listen(port, () => console.log(`Server is Up and Running`));
